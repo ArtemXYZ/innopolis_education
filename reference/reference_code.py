@@ -1,3 +1,11 @@
+# # import matplotlib.pyplot as plt
+# import numpy as np
+# import time
+# import sys
+# Устанавливаем максимальное количество цифр для строкового представления целого числа
+# sys.set_int_max_str_digits(10000)
+
+
 #
 # # ====
 # import time
