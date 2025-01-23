@@ -142,17 +142,3 @@ def test_get_index_element_array(array_list, serch_value, expected_result, expec
                 get_index_element_array(array_list=array_list, serch_element=serch_value)
         else:
             assert get_index_element_array(array_list=array_list, serch_element=serch_value) == expected_result
-
-
-
-
-
-
-#     # 1
-#     assert get_avg_in_array(array) == 4.0
-#     # 2
-#     with pytest.raises(ValueError, match='Ошибка, переданный массив пуст, операция не может быть выполнена!:'):
-#         get_avg_in_array([])
-#     # 3
-#     with pytest.raises(TypeError, match='Недопустимый тип данных для аргумента:'):
-#         get_avg_in_array({})
