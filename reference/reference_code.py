@@ -284,3 +284,111 @@
 # plt.legend()
 # plt.grid(True)
 # plt.show()
+# ================================
+# # сортировка пузырьком
+#
+# def bubble_sort(arr):
+#     n = len(arr)
+#     for i in range(n):
+#         swapped = False
+#         for j in range(0, n - i - 1):
+#             if arr[j] > arr[j + 1]:
+#                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
+#                 swapped = True
+#         if not swapped:
+#             break
+#     return arr
+
+#
+# result = bubble_sort([5, 1, 4, 2, 8])
+# print(result)
+# # Исходный массив: [5, 1, 4, 2, 8]
+# # Шаг 1: [1, 5, 4, 2, 8]
+# # Шаг 2: [1, 4, 5, 2, 8]
+# # Шаг 3: [1, 4, 2, 5, 8]
+# # Шаг 4: [1, 2, 4, 5, 8]
+
+# # сортировка вставками ***
+# def insertion_sort(arr):
+#     for i in range(1, len(arr)):
+#         key = arr[i]
+#         j = i - 1
+#         while j >= 0 and key < arr[j]:
+#             arr[j + 1] = arr[j]
+#             j -= 1
+#         arr[j + 1] = key
+#     return arr
+#
+#
+# result = insertion_sort([12, 11, 13, 5, 6])
+# print(result)
+# # Исходный массив: [12, 11, 13, 5, 6]
+# # Шаг 1: [11, 12, 13, 5, 6]
+# # Шаг 2: [11, 12, 13, 5, 6]
+# # Шаг 3: [5, 11, 12, 13, 6]
+# # Шаг 4: [5, 6, 11, 12, 13]
+#
+#
+# # сортировка выбором
+# def selection_sort(arr):
+#     for i in range(len(arr)):
+#         min_idx = i
+#         for j in range(i + 1, len(arr)):
+#             if arr[j] < arr[min_idx]:
+#                 min_idx = j
+#         arr[i], arr[min_idx] = arr[min_idx], arr[i]
+#     return arr
+#
+#
+# result = selection_sort([29, 10, 14, 37, 13])
+# print(result)
+#
+# # Исходный массив: [29, 10, 14, 37, 13]
+# # Шаг 1: [10, 29, 14, 37, 13]
+# # Шаг 2: [10, 13, 14, 37, 29]
+# # Шаг 3: [10, 13, 14, 37, 29]
+# # Шаг 4: [10, 13, 14, 29, 37]
+
+
+# сортировка Шелла
+def shell_sort(arr):
+    n = len(arr)
+    gap = n // 2
+
+    while gap > 0:
+        for i in range(gap, n):
+            temp = arr[i]
+            j = i
+            while j >= gap and arr[j - gap] > temp:
+                arr[j] = arr[j - gap]
+                j -= gap
+            arr[j] = temp
+        gap //= 2
+
+    return arr
+
+
+result = shell_sort([23, 12, 1, 8, 34, 54, 2, 3])
+print(result)
+# Исходный массив: [23, 12, 1, 8, 34, 54, 2, 3]
+# Gap = 4: [8, 2, 1, 3, 23, 12, 34, 54]
+# Gap = 2: [1, 2, 3, 8, 12, 23, 34, 54]
+# Gap = 1: [1, 2, 3, 8, 12, 23, 34, 54]
+
+
+import time
+import random
+
+def measure_time(sort_function, arr):
+    start_time = time.time()
+    sort_function(arr.copy())
+    return time.time() - start_time
+
+# Создание случайного массива
+arr = [random.randint(0, 10000) for _ in range(1000)]
+
+# Сравнение алгоритмов
+print(f"Пузырьковая сортировка: {measure_time(bubble_sort, arr)} секунд")
+print(f"Сортировка вставками: {measure_time(insertion_sort, arr)} секунд")
+print(f"Сортировка выбором: {measure_time(selection_sort, arr)} секунд")
+print(f"Сортировка Шелла: {measure_time(shell_sort, arr)} секунд")
