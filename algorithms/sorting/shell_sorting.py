@@ -24,6 +24,7 @@ class Employee:
             Кроме того, это позволит обращаться точно по индексу к требуемому типу информации (фамилия или возраст),
             а для сортировки будет выведен строковый эквивалент.
         """
+
         return self.family_name, self.name, self.patronymic, self.ege, self.salary
 
     @property
@@ -37,18 +38,18 @@ class Employee:
 
     def __str__(self):
         return (
-            f'{self.__class__.__name__} '
-            f'[Фамилия: {self.family_name}, Имя: {self.name}, '
-            f'Отчество: {self.patronymic}, Возраст: {self.ege},'
-            f'Зарплата: {self.salary}.]'
+            # f'{self.__class__.__name__} '
+            f'Фамилия: {self.family_name}, Имя: {self.name}, '
+            f'Отчество: {self.patronymic}, Возраст: {self.ege}, '
+            f'Зарплата: {self.salary}'
         )
 
     def __repr__(self):
         return (
-            f'{self.__class__.__name__} '
-            f'[Фамилия: {self.family_name}, Имя: {self.name}, '
-            f'Отчество: {self.patronymic}, Возраст: {self.ege},'
-            f'Зарплата: {self.salary}.]'
+            # f'{self.__class__.__name__} '
+            f'Фамилия: {self.family_name}, Имя: {self.name}, '
+            f'Отчество: {self.patronymic}, Возраст: {self.ege}, '
+            f'Зарплата: {self.salary}'
         )
 
 
@@ -67,11 +68,29 @@ class Employees:
         ]
 
     @property
-    def get_employee_data(self) -> None:
+    def get_employees_raw_data(self) -> list[Employee]:
         """
             Возвращает все имеющиеся данные сотрудников списком (list[tuple]).
         """
         return self._employees_data_list
+
+    @property
+    def get_employees_data_strs(self) -> list[str]:
+        """
+            Возвращает все имеющиеся данные сотрудников списком строк (объединенные данные сотрудника в строку)
+            (list[str]).
+        """
+
+        return [employee.get_employee_data_str for employee  in self._employees_data_list]
+
+    @property
+    def get_employees_data_tuples(self) -> list[tuple]:
+        """
+            Возвращает все имеющиеся данные сотрудников списком кортежей (list[tuple]).
+        """
+
+        return [employee.get_employee_data_tuple for employee  in self._employees_data_list]
+
 
     def add_employee(self, family_name: str, name: str, patronymic: str, ege: int, salary: int):
         """
@@ -83,11 +102,13 @@ class Employees:
         new_employee = Employee(family_name, name, patronymic, ege, salary)
         self._employees_data_list.append(new_employee)
 
+
+
     def __str__(self):
-        return f'{self.__class__.__name__} {self.get_employee_data}'
+        return f'{self.__class__.__name__} {self.get_employees_raw_data}'
 
     def __repr__(self):
-        return f'{self.__class__.__name__} {self.get_employee_data}'
+        return f'{self.__class__.__name__} {self.get_employees_raw_data}'
 
 
 class SortingTools:
@@ -122,21 +143,22 @@ class SortingTools:
             gap //= 2
 
 
-class Company:
+class Company(Employees):
 
     def __init__(self):
+        super.__init__()
 
-        self.employees = Employees()
-        self.tools = SortingTools
+        # self.employees = Employees()
+        # self.tools = SortingTools
 
-    def get_employees_list(self,):
-        """
-            Выдает все имеющиеся данные списком.
-            Предоставляет информацию пользователю о Компании.
-            На более низком уровне: преобразует список картежей (данных сотрудника в список).
-        """
-
-        employees_data = self.employees.get_employee_data
+    # def get_employees_list(self,):
+    #     """
+    #         Выдает все имеющиеся данные списком.
+    #         Предоставляет информацию пользователю о Компании.
+    #         На более низком уровне: преобразует список картежей (данных сотрудника в список).
+    #     """
+    #
+    #     employees_data = self.employees.get_employees_raw_data
 
 
 
@@ -177,7 +199,8 @@ class Company:
 #     print(q)
 
 
-
+# print(Employees())
+print(Employees().get_employees_data_str)
 
 
 
