@@ -60,22 +60,14 @@ class Employees:
     def __init__(self):
         # Значения по умолчанию:
         self._employees_data_list = [
-            Employee(
-                family_name='Перов', name='Александр', patronymic='Семенович', ege=23, salary=150
-            ).get_employee_data_tuple,
-            Employee(
-                family_name='Иванов', name='Артур', patronymic='Александрович', ege=23, salary=250
-            ).get_employee_data_tuple,
-            Employee(
-                family_name='Сидоров', name='Дмитрий', patronymic='Валерьянович', ege=23, salary=75
-            ).get_employee_data_tuple,
-            Employee(
-                family_name='Прохоров', name='Виталий', patronymic='Геннадиевич', ege=23, salary=50
-            ).get_employee_data_tuple,
+            Employee(family_name='Перов', name='Александр', patronymic='Семенович', ege=23, salary=150),
+            Employee(family_name='Иванов', name='Артур', patronymic='Александрович', ege=23, salary=250),
+            Employee(family_name='Сидоров', name='Дмитрий', patronymic='Валерьянович', ege=23, salary=75),
+            Employee(family_name='Прохоров', name='Виталий', patronymic='Геннадиевич', ege=23, salary=50),
         ]
 
     @property
-    def get_employee_data(self) -> list[tuple]:
+    def get_employee_data(self) -> None:
         """
             Возвращает все имеющиеся данные сотрудников списком (list[tuple]).
         """
@@ -89,7 +81,7 @@ class Employees:
         # Валидацию опускаем.
 
         new_employee = Employee(family_name, name, patronymic, ege, salary)
-        self._employees_data_list.append(new_employee.get_employee_data_tuple)
+        self._employees_data_list.append(new_employee)
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.get_employee_data}'
@@ -197,60 +189,19 @@ class Company:
 
 
 # =============================================================================
-#     def __init__(self, family_name: str, name: str, patronymic: str, ege: int,):
-#
-#         # В текущей реализации делаем все параметры обязательными для упрощения.
-#         self.family_name = family_name,
-#         self.name = name,
-#         self.patronymic = patronymic,
-#         self.ege = ege,
-#
-#
-#     def __str__(self):
-#         return (
-#             f'{self.__class__.__name__}: '
-#             f'[Фамилия: {self.family_name}, Имя: {self.name}, Отчество: {self.patronymic}, Возраст: {self.ege}]'
-#         )
-
-# class Employee:
-#     """
-#         Employee data.
-#     """
-#
 #     def __init__(self):
-#
-#         # Принимаем список сотрудников по умолчанию, определенных заранее.
-#         self.employee_list = employee_list_example,
-
-#     def __str__(self):
-#         return (
-#             f'{self.__class__.__name__}: Список сотрудников: {self.employee_list}'
-#         )
-
-#     def shell_sorting_dict(arr):
-#         n = len(arr)
-#         gap = n // 2
-#
-#         while gap > 0:
-#             for i in range(gap, n):
-#                 temp = arr[i]
-#                 j = i
-#                 while j >= gap and arr[j - gap] > temp:
-#                     arr[j] = arr[j - gap]
-#                     j -= gap
-#                 arr[j] = temp
-#             gap //= 2
-#
-#         return arr
-
-#
-#
-# result = shell_sort([23, 12, 1, 8, 34, 54, 2, 3])
-# print(result)
-
-
-# def __repr__(self):
-#     return (
-#         f'{self.__class__.__name__}: '
-#         f'[Фамилия: {self.family_name}, Имя: {self.name}, Отчество: {self.patronymic}, Возраст: {self.ege}]'
-#     )
+#         # Значения по умолчанию:
+#         self._employees_data_list = [
+#             Employee(
+#                 family_name='Перов', name='Александр', patronymic='Семенович', ege=23, salary=150
+#             ).get_employee_data_tuple,
+#             Employee(
+#                 family_name='Иванов', name='Артур', patronymic='Александрович', ege=23, salary=250
+#             ).get_employee_data_tuple,
+#             Employee(
+#                 family_name='Сидоров', name='Дмитрий', patronymic='Валерьянович', ege=23, salary=75
+#             ).get_employee_data_tuple,
+#             Employee(
+#                 family_name='Прохоров', name='Виталий', patronymic='Геннадиевич', ege=23, salary=50
+#             ).get_employee_data_tuple,
+#         ]
