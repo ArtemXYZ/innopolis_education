@@ -50,7 +50,6 @@ def get_index_element_array(array_list: list, serch_element: int) -> int:
         :param serch_element: Значение, которое требуется проверить.
         :return: Возвращает искомый элемент или значение "-1", если элемент отсутствует.
         :rtype: int.
-!
     """
 
     # Валидация входных данных:
