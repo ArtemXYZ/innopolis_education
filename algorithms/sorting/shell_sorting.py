@@ -144,12 +144,23 @@ class SortingTools:
 
 
 class Company(Employees):
+    """
+        Класс - фасад для предоставления всех итоговых данных.
+    """
 
     def __init__(self):
-        super.__init__()
+        super().__init__()
+        employees_data_tuples = self.get_employees_data_tuples
+        employees_data_tuples = self.get_employees_data_strs
 
         # self.employees = Employees()
         # self.tools = SortingTools
+
+
+
+
+
+
 
     # def get_employees_list(self,):
     #     """
@@ -200,7 +211,7 @@ class Company(Employees):
 
 
 # print(Employees())
-print(Employees().get_employees_data_str)
+# print(Employees().get_employees_data_str)
 
 
 
