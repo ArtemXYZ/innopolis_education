@@ -4,7 +4,6 @@
 
 import pytest
 from typing import TypeVar
-
 any_types = TypeVar('any_types')  # Создаем обобщённый тип данных.
 
 
@@ -42,19 +41,19 @@ def _validator(value: any_types, *check_type: type[any]) -> any_types:
         raise TypeError(f'Недопустимый тип данных: "{type(value).__name__}", для аргумента: "{value}".')
 
 
-def get_index_element_array(array_list: list, serch_element: int) -> int:
+def get_index_element_array(array_list: list, search_element: int) -> int:
     """
         *** Алгоритм бинарного поиска индекса заданного элемента в отсортированном массиве с пропусками. ***
 
         :param array_list: Входной массив, (присутствуют None).
-        :param serch_element: Значение, которое требуется проверить.
+        :param search_element: Значение, которое требуется проверить.
         :return: Возвращает искомый элемент или значение "-1", если элемент отсутствует.
         :rtype: int.
     """
 
     # Валидация входных данных:
     valid_array_list = _validator(array_list, list)
-    valid_element = _validator(serch_element, int)
+    valid_element = _validator(search_element, int)
 
     # Если не пустой массив:
     if not valid_array_list:
@@ -100,7 +99,7 @@ def get_index_element_array(array_list: list, serch_element: int) -> int:
             right = midl_index - 1
 
     # ---------------------------------------- Элемент не найден:
-    print(f'Ошибка, переданный елемент не найден!: {valid_element}.')
+    print(f'Ошибка, переданный элемент не найден!: {valid_element}.')
     return -1
 
 
@@ -138,6 +137,6 @@ print(index_element)
 def test_get_index_element_array(array_list, serch_value, expected_result, expected_exception, match):
         if expected_exception:
             with pytest.raises(expected_exception=expected_exception, match=match):
-                get_index_element_array(array_list=array_list, serch_element=serch_value)
+                get_index_element_array(array_list=array_list, search_element=serch_value)
         else:
-            assert get_index_element_array(array_list=array_list, serch_element=serch_value) == expected_result
+            assert get_index_element_array(array_list=array_list, search_element=serch_value) == expected_result
