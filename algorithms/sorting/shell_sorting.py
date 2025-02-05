@@ -5,8 +5,6 @@
 import re
 from typing import TypeVar
 
-
-
 any_types = TypeVar('any_types')  # Создаем обобщённый тип данных.
 
 
@@ -141,7 +139,6 @@ class Ebooks:
             self._ebooks_data_list.append(new_ebook)
         else:
             print('Книга не может быть добавлена -  заполните все обязательные параметры!')
-
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.get_ebooks_raw_data}'
@@ -348,10 +345,6 @@ class Algorithms:
         return None
 
 
-
-
-
-
 class EbooksLibrary(Ebooks, Algorithms):
     """
         Класс - фасад для взаимодействия с данными (вывода, сортировки, добавления).
@@ -361,7 +354,6 @@ class EbooksLibrary(Ebooks, Algorithms):
         super().__init__()
 
         # self.sort_by_title = None
-
 
     @staticmethod
     def _generator_str(arey: list[tuple]):
@@ -455,7 +447,7 @@ class EbooksLibrary(Ebooks, Algorithms):
         sort_books_tuple = self.sort_books_by_author(service_mode=True)
 
         # 2. Поиск индекса искомого элемента:
-        _index = self.get_index_element_array(sort_books_tuple,param,1)
+        _index = self.get_index_element_array(sort_books_tuple, param, 1)
 
         if _index:
             # 3. Извлечение искомого элемента по найденному индексу:
@@ -476,7 +468,7 @@ class EbooksLibrary(Ebooks, Algorithms):
         sort_books_tuple = self.sort_books_by_title(service_mode=True)
 
         # 2. Поиск индекса искомого элемента:
-        _index = self.get_index_element_array(sort_books_tuple,param,0)
+        _index = self.get_index_element_array(sort_books_tuple, param, 0)
 
         if _index:
             # 3. Извлечение искомого элемента по найденному индексу:
@@ -514,7 +506,6 @@ class EbooksLibrary(Ebooks, Algorithms):
                 f'Необходимо передать, хотя бы один критерий для поиска: название, автор!'
             )
 
-
         # Проходимся циклом обычным (линейный поиск) обращаясь к атрибутам:
         for index, ebook in enumerate(self._ebooks_data_list):
             array_len = len(self._ebooks_data_list)
@@ -530,16 +521,19 @@ class EbooksLibrary(Ebooks, Algorithms):
 
             # Проверяем условие, когда хотя бы по одному критерию поиска найдено совпадение:
             if _title == title_v or _author == author_v:
-            # if re_title or re_author:
+                # if re_title or re_author:
                 self._ebooks_data_list.pop(index)
 
                 print(f'Книга {ebook.__str__()} удалена!')
                 break
 
             if index == max_index:
-
                 print(f'Книга не найдена, проверьте параметры поиска (название: {title}, автор: {author})!')
 
+    def load_ebooks_from_file(self, title: str = None, author: str = None):
+        """
+           Загружает список книг из файла в общую библиотеку (добавляет в общий список книг).
+        """
 
 
 # e = Ebook()
@@ -547,8 +541,6 @@ class EbooksLibrary(Ebooks, Algorithms):
 
 e_library = EbooksLibrary()
 e_library.del_ebook(title='Пять травм, которые мешают быть самим ')
-
-
 
 # # print(e_library.count_attrs_ebook)
 # print(e_library._check_params_by_count(5))
@@ -562,6 +554,3 @@ e_library.del_ebook(title='Пять травм, которые мешают бы
 #  print(e_library.sort_employees_by_name)
 
 # print(e_library.sort_employees_by_family_name)
-
-
-
