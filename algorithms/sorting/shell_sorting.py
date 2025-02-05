@@ -2,13 +2,6 @@
      example.
 """
 
-import re
-from typing import TypeVar
-
-
-
-any_types = TypeVar('any_types')  # Создаем обобщённый тип данных.
-
 
 class Ebook:
     """
@@ -88,17 +81,6 @@ class Ebooks:
 
         self.count_attrs_ebook = Ebook().count_attrs
 
-    @staticmethod
-    def _validator(value: any_types, *check_type: type[any]) -> any_types:
-        """
-            *** Функция валидации аргументов. ***
-        """
-
-        if isinstance(value, check_type):
-            return value
-        else:
-            raise TypeError(f'Недопустимый тип данных: "{type(value).__name__}", для аргумента: "{value}".')
-
     @property
     def get_ebooks_raw_data(self) -> list[Ebook]:
         """
@@ -129,19 +111,10 @@ class Ebooks:
            Опциональный метод. Добавляет новую книгу в список всех сотрудников.
         """
 
-        # Валидация.
-        _title = self._validator(title, str)
-        _author = self._validator(author, str)
-        _year = self._validator(year, str)
+        # Валидацию опускаем.
 
-        # Книга может быть добавлена только при наличии полных данных:
-        if _title and _author and _year:
-
-            new_ebook = Ebook(_title, _author, _year)
-            self._ebooks_data_list.append(new_ebook)
-        else:
-            print('Книга не может быть добавлена -  заполните все обязательные параметры!')
-
+        new_ebook = Ebook(title, author, year)
+        self._ebooks_data_list.append(new_ebook)
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.get_ebooks_raw_data}'
@@ -157,6 +130,40 @@ class Algorithms:
 
     def __init__(self):
         pass
+
+    # @staticmethod
+    # def shell_sorting_dict(employees_tuple_list: list[tuple], key_tuple: int):
+    #     """
+    #         Должен принимать кортеж и обеспечивать сортировку по его ключам. Выдача списка отсортированного.
+    #     """
+    #
+    #     # Определяем длину массива:
+    #     n = len(employees_tuple_list)
+    #
+    #     # Определяем шаг:
+    #     gap = n // 2
+    #
+    #
+    #     while gap > 0:
+    #         # Перебираем индексы элементов в шаге:
+    #         for i in range(gap, n):
+    #
+    #             # Обращаемся в списке к кортежу по индексу и его элементу (по ключу) \
+    #             # фактически сравниваем значение из кортежа, а не весь кортеж:
+    #             temp_1 = employees_tuple_list[i][key_tuple]      # [key_tuple]
+    #             temp_2 = employees_tuple_list[i]
+    #             j = i
+    #
+    #             # Аналогично вытягиваем значение из картежа по ключу:
+    #             while j >= gap and employees_tuple_list[j - gap][key_tuple]  > temp_1:
+    #                 employees_tuple_list[j] = employees_tuple_list[j - gap]
+    #
+    #                 j -= gap
+    #
+    #             employees_tuple_list[j] = temp_2
+    #         gap //= 2
+    #
+    #     return employees_tuple_list
 
     def quick_sort(self, ebooks_tuple_list: list[tuple], key_tuple: int):
         """
@@ -284,72 +291,7 @@ class Algorithms:
             # Рекурсивно преобразуем затронутое поддерево в max-heap
             self._heapify(arr, n, largest, key_tuple)
 
-    @staticmethod
-    def get_index_element_array(
-            ebooks_tuple_list: list[tuple],
-            search_element: int | str,
-            key_tuple: int
-    ) -> int | None:
-        """
-            *** Алгоритм бинарного поиска индекса заданного элемента в отсортированном массиве с пропусками. ***
-
-            :param ebooks_tuple_list: Входной массив кортежей (присутствуют None).
-            :param search_element: Значение, которое требуется проверить.
-            :param key_tuple: Индекс ключа в кортеже для сравнения.
-            :return: Возвращает индекс искомого элемента или None, если элемент отсутствует.
-            :rtype: None | int.
-        """
-
-        # Валидация входных данных:
-        if not ebooks_tuple_list:
-            raise ValueError(f'Ошибка, переданный массив пуст, операция не может быть выполнена! {ebooks_tuple_list}.')
-
-        # Определение границ:
-        left, right = 0, len(ebooks_tuple_list) - 1
-
-        # Перебор массива:
-        while left <= right:
-            # Индекс среднего элемента последовательности (округляет в сторону меньшего числа):
-            midl_index: int = (left + right) // 2
-
-            # Обработка пропусков:
-            # Если элемент в середине равен None, ищем ближайший ненулевой элемент:
-            if ebooks_tuple_list[midl_index] is None:
-                low, high = midl_index - 1, midl_index + 1
-                while True:
-                    if low >= left and ebooks_tuple_list[low] is not None:
-                        midl_index = low
-                        break
-                    if high <= right and ebooks_tuple_list[high] is not None:
-                        midl_index = high
-                        break
-                    low -= 1
-                    high += 1
-                    if low < left and high > right:
-                        return -1  # Все элементы в пределах left и right равны None
-
-            # Основной алгоритм:
-            # Проверка среднего элемента (Если сразу же совпало, возвращаем результат):
-            if ebooks_tuple_list[midl_index][key_tuple] == search_element:
-                return midl_index
-
-            # Если искомый элемент больше среднего, игнорируем левую половину:
-            elif ebooks_tuple_list[midl_index][key_tuple] < search_element:
-                # Сдвигаем левую границу (проверили середину, теперь следующее число от средины будет начальной границей).
-                left = midl_index + 1
-
-            # Если искомый элемент меньше среднего, игнорируем правую половину:
-            else:
-                # Сдвигаем правую границу (проверили середину, теперь предыдущее число от средины будет конечной границей).
-                right = midl_index - 1
-
-        # Элемент не найден:
-        # print(f'Ошибка, переданный элемент не найден!: {search_element}.')
-        return None
-
-
-
-
+    # todo: алгоритм поиска любой
 
 
 class EbooksLibrary(Ebooks, Algorithms):
@@ -359,9 +301,6 @@ class EbooksLibrary(Ebooks, Algorithms):
 
     def __init__(self):
         super().__init__()
-
-        # self.sort_by_title = None
-
 
     @staticmethod
     def _generator_str(arey: list[tuple]):
@@ -389,8 +328,8 @@ class EbooksLibrary(Ebooks, Algorithms):
                 f'Получено значение: {param_key}, допустимый предел: от 0 до {index_limit}.'
             )
 
-    # -----------------------------------------------
-    def sort_books_by_title(self, service_mode=False):
+    @property
+    def sort_books_by_title(self):
         """
             Сортировка по названию книги (по алфавиту).
         """
@@ -401,14 +340,10 @@ class EbooksLibrary(Ebooks, Algorithms):
         # Получаем отсортированный кортеж:
         result_tmp = self.quick_sort(self.get_ebooks_data_tuples, param_key_valid)
 
-        if service_mode:
-            result = result_tmp
-        else:
-            result = self._generator_str(result_tmp)
+        return self._generator_str(result_tmp)
 
-        return result
-
-    def sort_books_by_author(self, service_mode=False):
+    @property
+    def sort_books_by_author(self, ):
         """
             Сортировка по имени автора книги (по алфавиту).
         """
@@ -419,14 +354,10 @@ class EbooksLibrary(Ebooks, Algorithms):
         # Получаем отсортированный кортеж:
         result_tmp = self.merge_sort(self.get_ebooks_data_tuples, param_key_valid)
 
-        if service_mode:
-            result = result_tmp
-        else:
-            result = self._generator_str(result_tmp)
+        return self._generator_str(result_tmp)
 
-        return result
-
-    def sort_books_by_year(self, service_mode=False):
+    @property
+    def sort_books_by_year(self):
         """
             Сортировка по году издания книги (по алфавиту).
         """
@@ -437,119 +368,13 @@ class EbooksLibrary(Ebooks, Algorithms):
         # Получаем отсортированный кортеж:
         result_tmp = self.heap_sort(self.get_ebooks_data_tuples, param_key_valid)
 
-        if service_mode:
-            result = result_tmp
-        else:
-            result = self._generator_str(result_tmp)
-
-        return result
-
-    # -----------------------------------------------
-    def search_books_by_autor(self, param: str):
-        """
-            Поиск книг по заданному параметру.
-            В текущей реализации или по автору, или по названию.
-        """
-
-        # 1. Сортируем массив перед поиском:
-        sort_books_tuple = self.sort_books_by_author(service_mode=True)
-
-        # 2. Поиск индекса искомого элемента:
-        _index = self.get_index_element_array(sort_books_tuple,param,1)
-
-        if _index:
-            # 3. Извлечение искомого элемента по найденному индексу:
-            element = self._generator_str([sort_books_tuple[_index]])
-        else:
-            print(f'Искомое значение не найдено!: {_index}.')
-            element = None
-
-        return element
-
-    def search_books_by_title(self, param: str):
-        """
-            Поиск книг по заданному параметру.
-            В текущей реализации или по автору, или по названию.
-        """
-
-        # 1. Сортируем массив перед поиском:
-        sort_books_tuple = self.sort_books_by_title(service_mode=True)
-
-        # 2. Поиск индекса искомого элемента:
-        _index = self.get_index_element_array(sort_books_tuple,param,0)
-
-        if _index:
-            # 3. Извлечение искомого элемента по найденному индексу:
-            element = self._generator_str([sort_books_tuple[_index]])
-        else:
-            print(f'Искомое значение не найдено!: {_index}.')
-            element = None
-
-        return element
-
-    # -----------------------------------------------
-
-    def del_ebook(self, title: str = None, author: str = None):
-        """
-           Опциональный метод. Добавляет новую книгу в список всех сотрудников.
-        """
-
-        # # Инициализируем переменные по умолчанию
-        title_v = None
-        author_v = None
-
-        # Проверяем переданы ли аргументы для поиска:
-        if title or author:
-
-            if title:
-                # Валидация.
-                title_v = self._validator(title, str)
-
-            if author:
-                author_v = self._validator(author, str)
-
-        else:
-            raise TypeError(
-                f'Ошибка, параметры поиска не были заданы. '
-                f'Необходимо передать, хотя бы один критерий для поиска: название, автор!'
-            )
-
-
-        # Проходимся циклом обычным (линейный поиск) обращаясь к атрибутам:
-        for index, ebook in enumerate(self._ebooks_data_list):
-            array_len = len(self._ebooks_data_list)
-            max_index = array_len - 1
-            _title = ebook.title
-            _author = ebook.author
-            # _year = ebook.year
-
-            # Проверяем, содержится ли строка в подстроке (регистронезависимо),
-            # если пользователь ввел только часть значения:
-            # re_title = re.search(re.escape(title_v), _title, re.IGNORECASE)
-            # re_author = re.search(re.escape(author_v), _author, re.IGNORECASE)
-
-            # Проверяем условие, когда хотя бы по одному критерию поиска найдено совпадение:
-            if _title == title_v or _author == author_v:
-            # if re_title or re_author:
-                self._ebooks_data_list.pop(index)
-
-                print(f'Книга {ebook.__str__()} удалена!')
-                break
-
-            if index == max_index:
-
-                print(f'Книга не найдена, проверьте параметры поиска (название: {title}, автор: {author})!')
-
+        return self._generator_str(result_tmp)
 
 
 # e = Ebook()
 # print(e.count_attrs)
 
 e_library = EbooksLibrary()
-e_library.del_ebook(title='Пять травм, которые мешают быть самим ')
-
-
-
 # # print(e_library.count_attrs_ebook)
 # print(e_library._check_params_by_count(5))
 
