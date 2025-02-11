@@ -9,13 +9,14 @@
 import heapq
 import time
 
+
 class Task:
     """
         Класс-представление отдельной задачи.
         Используем магические методы для определения сравнения их по атрибутам.
     """
 
-    def __init__(self, name = None, duration = None):
+    def __init__(self, name=None, duration=None):
         # Название задачи:
         self.name: str = name if name else None
         #  Время выполнения задачи в секундах.
@@ -42,17 +43,14 @@ class Task:
     def __str__(self):
         return (
             # f'{self.__class__.__name__} '
-            f'Имя задачи: {self.name}, Время выполнения в секундах: {self.duration}'
+            f'Имя задачи: {self.name}, время выполнения в секундах: {self.duration}'
         )
 
     def __repr__(self):
         return (
             # f'{self.__class__.__name__} '
-            f'Имя задачи: {self.name}, Время выполнения в секундах: {self.duration}'
+            f'Имя задачи: {self.name}, время выполнения в секундах: {self.duration}'
         )
-
-
-
 
 
 class TaskScheduler(Task):
@@ -63,6 +61,7 @@ class TaskScheduler(Task):
     def __init__(self):
         super().__init__()
         self.queue_list = []
+        self.status_data = {1: 'Pending', 2: 'In Progress...', 3: 'Completed'}
 
     def add_task(self, name, duration):
         """
@@ -71,36 +70,57 @@ class TaskScheduler(Task):
         task = Task(name=name, duration=duration)
         heapq.heappush(self.queue_list, task)
 
-    def del_task(self) -> Task:
+    def del_task(self, status: bool = False, sleep_time: bool = False) -> Task:
         """
             Удаляет и возвращает элемент с наивысшим приоритетом.
+            :param status: Режим вывода на печать статуса.
+            :param sleep_time: Режим при котором учитывается время выполнения.
         """
-        if not self.is_empty():
+        if not self.is_empty:
+
+            sleep_time_value = self.get_task.duration
+
+            if status:
+                print(f'Статус: {self.status_data.get(1)}, {self.get_task.__str__}.')
+
+            if status:
+                print(f'Статус: {self.status_data.get(2)}')
+
+            if sleep_time:
+                time.sleep(sleep_time_value)
+
             task: Task = heapq.heappop(self.queue_list)
 
-            # Имитация работы:
-            time.sleep(task.duration)
-
-            print(
-                f'Задача {task.name} удалена из очереди, время выполнения: {task.duration}. '
-                f'Осталось элементов : {self.task_count()}.'
-            )
-            return task
+            if status:
+                print(f'Статус: {self.status_data.get(3)}.')
 
 
-        raise IndexError("dequeue from empty queue")
 
+    @property
+    def get_task(self) -> Task | None:
+        """
+            Возвращает элемент с наивысшим приоритетом.
+        """
+        # print(self.is_empty)
+
+        if not self.is_empty:
+            # print(self.is_empty)
+            # first_element
+            return self.queue_list[0]
+        raise IndexError('Список пуст! Невозможно извлечь задачу.')
+
+    @property
     def is_empty(self) -> bool:
         """
             Проверяет, пуста ли очередь задач.
-        """
 
+        """
         return len(self.queue_list) == 0
 
+    @property
     def task_count(self) -> int:
         """Возвращает количество задач в очереди."""
         return len(self.queue_list)
-
 
     def execute_tasks(self):
         """
@@ -109,25 +129,18 @@ class TaskScheduler(Task):
             После выполнения задачи удаляет её из очереди.
         """
 
-        status = 'Pending'
-        'In Progress'
-        'Completed'
-
-        if self.is_empty():
+        # ----------------------------------------------------
+        if self.is_empty:
             print('Очередь пуста! Работа метода "execute_tasks" остановлена.')  # raise ValueError
 
-        print(f'Обработка данных очереди:')
-        while not self.is_empty():
+        # ----------------------------------------------------
+        print(f'Запуск обработки данных очереди длинной в {self.task_count} элементов:')
 
-            task: Task = self.del_task()
+        while not self.is_empty:
 
+            task: Task = self.del_task(status=True, sleep_time=False)
 
-
-            # print(
-            #     f'Задача {task.name} завершена, время выполнения: {task.duration}. '
-            #     f'Осталось элементов в очереди: {self.task_count()}.'
-            # )
-
+        print(f'Обработка данных очереди завершена.')
 
     def __str__(self):
         return (
@@ -141,17 +154,15 @@ class TaskScheduler(Task):
             f'Список задач: {self.queue_list}'
         )
 
+
 # Пример использования
 tasks = TaskScheduler()
-
 tasks.add_task('tasks_1', 9)
 tasks.add_task('tasks_2', 4)
 tasks.add_task('tasks_3', 2)
 tasks.add_task('tasks_4', 5)
 tasks.add_task('tasks_5', 6)
 tasks.add_task('tasks_6', 7)
-
-
 
 # 6
 # print(tasks.task_count())
@@ -165,11 +176,24 @@ tasks.add_task('tasks_6', 7)
 
 
 
-# Обработка данных очереди:
-# Задача tasks_4 удалена из очереди, время выполнения: 33. Осталось элементов : 5.
-# Задача tasks_5 удалена из очереди, время выполнения: 123. Осталось элементов : 4.
-# Задача tasks_3 удалена из очереди, время выполнения: 456. Осталось элементов : 3.
-# Задача tasks_1 удалена из очереди, время выполнения: 665. Осталось элементов : 2.
-# Задача tasks_6 удалена из очереди, время выполнения: 2234. Осталось элементов : 1.
-# Задача tasks_2 удалена из очереди, время выполнения: 5235. Осталось элементов : 0.
-# tasks.execute_tasks()
+# Запуск обработки данных очереди длинной в 6 элементов:
+# Статус: Pending, <bound method Task.__str__ of Имя задачи: tasks_3, время выполнения в секундах: 2>.
+# Статус: In Progress...
+# Статус: Completed.
+# Статус: Pending, <bound method Task.__str__ of Имя задачи: tasks_2, время выполнения в секундах: 4>.
+# Статус: In Progress...
+# Статус: Completed.
+# Статус: Pending, <bound method Task.__str__ of Имя задачи: tasks_4, время выполнения в секундах: 5>.
+# Статус: In Progress...
+# Статус: Completed.
+# Статус: Pending, <bound method Task.__str__ of Имя задачи: tasks_5, время выполнения в секундах: 6>.
+# Статус: In Progress...
+# Статус: Completed.
+# Статус: Pending, <bound method Task.__str__ of Имя задачи: tasks_6, время выполнения в секундах: 7>.
+# Статус: In Progress...
+# Статус: Completed.
+# Статус: Pending, <bound method Task.__str__ of Имя задачи: tasks_1, время выполнения в секундах: 9>.
+# Статус: In Progress...
+# Статус: Completed.
+# Обработка данных очереди завершена.
+tasks.execute_tasks()
