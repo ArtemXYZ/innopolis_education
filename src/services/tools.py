@@ -25,7 +25,6 @@ class ServiceTols:
     def is_empty_array(array) -> bool:
         """
             Проверяет, пуст ли массив: вернет True, если пуст.
-
         """
 
         return len(array) == 0  # True
