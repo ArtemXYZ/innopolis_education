@@ -4,20 +4,16 @@
     информации и оптимизирует процесс обработки с помощью различных алгоритмов.
 """
 
-
 # import time
 from dataclasses import dataclass
-
 
 from src.algorithms_core.main import AlgorithmsForeInstanceClasses
 from src.services.tools import ServiceTols
 
 
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 @dataclass(order=True)
-class Delivery:
+class Delivery(ServiceTols):
     """
         Класс-представление данных о доставке.
 
@@ -33,21 +29,23 @@ class Delivery:
     def __init__(
             # Все атрибуты по умолчанию None, что бы можно было наследоваться без явной передачи аргументов.
             self,
-            delivery_id=None,
-            from_point=None,
-            to_point=None,
-            weight_cargo=None,
-            time_delivery=None,
-            task_name=None,
-    ):
+            delivery_id: int = None,  # id доставки.
+            from_point: str = None,  # Пункт отправления.
+            to_point: str = None,  # Пункт назначения.
+            weight_cargo: int | float = None,  # Вес груза.
+            time_delivery: int = None,  # Время доставки.
+            task_name: str = None,  # Название задачи:
+            priority: int = None,  # Приоритетность задачи:
 
-        self.delivery_id = delivery_id      # id доставки.
-        self.from_point = from_point        # Пункт отправления.
-        self.to_point = to_point            # Пункт назначения.
-        self.weight_cargo = weight_cargo    # Вес груза.
-        self.time_delivery = time_delivery  # Время доставки.
-        self.task_name = task_name          # Название задачи:
-
+    ) -> None:
+        super().__init__()
+        self.delivery_id = delivery_id if self._validator(delivery_id, int) else ...
+        self.from_point = from_point if self._validator(from_point, int) else ...
+        self.to_point = to_point if self._validator(to_point, int) else ...
+        self.weight_cargo = weight_cargo if self._validator(weight_cargo, int) else ...
+        self.time_delivery = time_delivery if self._validator(time_delivery, int) else ...
+        self.task_name = task_name if self._validator(task_name, int) else ...
+        self.task_name = priority if self._validator(priority, int) else ...
 
     @property
     def _count_attrs(self):
@@ -58,23 +56,6 @@ class Delivery:
         """
 
         return len(vars(self))
-
-    @property
-    def get_tuple_view_delivery(self) -> tuple:
-        """
-            Возвращаем данные о книге в кортеже (обеспечиваем защиту от изменений, немутабельность).
-            Кроме того, это позволит обращаться точно по индексу к требуемому типу информации,
-            а для сортировки будет выведен строковый эквивалент.
-        """
-
-        return (
-            self.delivery_id,  # id доставки.
-            self.from_point,  # Пункт отправления.
-            self.to_point,  # Пункт назначения.
-            self.weight_cargo,  # Вес груза.
-            self.time_delivery,  # Время доставки.
-            self.task_name,  # Название задачи:
-        )
 
     def __str__(self):
         return (
@@ -141,10 +122,9 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
 
         return 1 + self._check_last_id_value()
 
-
     # --------------------------------- Основные методы:
     def add_delivery_task(
-            self, _from_point, _to_point, _weight_cargo, _time_delivery, _task_name
+            self, _from_point, _to_point, _weight_cargo, _time_delivery, _task_name, _priority
     ) -> None:
         """
             Метод добавления задачи на доставку (Task). Автоматически определяет айди для новой задачи.
@@ -161,16 +141,16 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
         """
 
         delivery_inst = Delivery(
-            delivery_id=self._get_new_delivery_id_value,
+            delivery_id=self._get_new_delivery_id_value(),
             from_point=_from_point,
             to_point=_to_point,
             weight_cargo=_weight_cargo,
             time_delivery=_time_delivery,
-            task_name=_task_name
+            task_name=_task_name,
+            priority=_priority
         )
 
         self.delivery_list.append(delivery_inst)
-
 
     def remove_delivery_task(self, attribute_name, search_element):
         """
@@ -182,7 +162,7 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
         """
 
         index_elem = self._searcher(
-            self.delivery_list, search_element,  attribute_name, 'binary'
+            self.delivery_list, search_element, attribute_name, 'binary'
         )
 
         # Удаление из общего хранилища данных по индексу:
@@ -190,7 +170,6 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
 
         # Удаление из стека и очереди по индексу:
         pass
-
 
     # ------------------------------------------------ Сортировки:
     def sort_delivery_list_by_weight_cargo(self):
@@ -202,7 +181,6 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
         # sorted_list
         return self._merge_sort(self.delivery_list, 'weight_cargo')
 
-
     def sort_delivery_list_by_time_delivery(self):
         """
              Метод (экземпляра класса) сортировки списка поставок по времени доставки.
@@ -211,7 +189,6 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
 
         # sorted_list
         return self._quick_sort(self.delivery_list, 'time_delivery')
-
 
     def sort_delivery_list_by_delivery_id(self):
         """
@@ -247,9 +224,6 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
             self.delivery_list, _time_delivery, 'time_delivery', 'binary'
         )
 
-
-
-
     # def process_urgent_requests(self):
     #     # Обработка срочных запросов через стек
     #     stack = deque(self.delivery_list)
@@ -264,150 +238,113 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
     #         delivery = queue.popleft()
     #         # Обработка доставки
     #
-    # def search_by_id(self, delivery_id):
-    #     # Линейный поиск по ID
-    #     for delivery in self.delivery_list:
-    #         if delivery.id == delivery_id:
-    #             return delivery
-    #     return None
-
-
-
-
 
 
 #      удалять
 #      изменять поставки,
-#      сортировать их по различным критериям,
+
 #      обрабатывать запросы с использованием стека и очереди,
-#      поиск по различным критериям.
-
-
-
-
-
 
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-# class TaskScheduler(Delivery):
-#     """
-#         Класс управления очередью задач.
-#     """
-#
-#     def __init__(self):
-#         super().__init__()
-#         self.queue_list = []
-#         self.status_data = {1: 'Pending', 2: 'In Progress...', 3: 'Completed'}
-#
-#     def add_task(self, name, duration):
-#         """
-#             Добавляет задачу в очередь с приоритетом.
-#         """
-#         task = Task(name=name, duration=duration)
-#         heapq.heappush(self.queue_list, task)
-#
-#     def del_task(self, status: bool = False, sleep_time: bool = False) -> Task:
-#         """
-#             Удаляет и возвращает элемент с наивысшим приоритетом.
-#             :param status: Режим вывода на печать статуса.
-#             :param sleep_time: Режим при котором учитывается время выполнения.
-#         """
-#         if not self.is_empty:
-#
-#             sleep_time_value = self.get_task.duration
-#
-#             if status:
-#                 print(f'Статус: {self.status_data.get(1)}, {self.get_task.__str__}.')
-#
-#             if status:
-#                 print(f'Статус: {self.status_data.get(2)}')
-#
-#             if sleep_time:
-#                 time.sleep(sleep_time_value)
-#
-#             task: Task = heapq.heappop(self.queue_list)
-#
-#             if status:
-#                 print(f'Статус: {self.status_data.get(3)}.')
-#
-#
-#
-#     @property
-#     def get_task(self) -> Task | None:
-#         """
-#             Возвращает элемент с наивысшим приоритетом.
-#         """
-#         # print(self.is_empty)
-#
-#         if not self.is_empty:
-#             # print(self.is_empty)
-#             # first_element
-#             return self.queue_list[0]
-#         raise IndexError('Список пуст! Невозможно извлечь задачу.')
-#
-#     @property
-#     def is_empty(self) -> bool:
-#         """
-#             Проверяет, пуста ли очередь задач.
-#
-#         """
-#         return len(self.queue_list) == 0
-#
-#     @property
-#     def task_count(self) -> int:
-#         """Возвращает количество задач в очереди."""
-#         return len(self.queue_list)
-#
-#     def execute_tasks(self):
-#         """
-#             Последовательно выполняет все задачи в очереди.
-#             Каждая задача занимает определенное время (duration).
-#             После выполнения задачи удаляет её из очереди.
-#         """
-#
-#         # ----------------------------------------------------
-#         if self.is_empty:
-#             print('Очередь пуста! Работа метода "execute_tasks" остановлена.')  # raise ValueError
-#
-#         # ----------------------------------------------------
-#         print(f'Запуск обработки данных очереди длинной в {self.task_count} элементов:')
-#
-#         while not self.is_empty:
-#
-#             task: Task = self.del_task(status=True, sleep_time=False)
-#
-#         print(f'Обработка данных очереди завершена.')
-#
-#     def __str__(self):
-#         return (
-#             f'{self.__class__.__name__}. '
-#             f'Список задач: {self.queue_list}'
-#         )
-#
-#     def __repr__(self):
-#         return (
-#             f'{self.__class__.__name__}. '
-#             f'Список задач: {self.queue_list}'
-#         )
+class TaskScheduler(Delivery):
+    """
+        Класс управления очередью задач.
+    """
 
+    def __init__(self):
+        super().__init__()
+        self.queue_list = []
+        self.status_data = {1: 'Pending', 2: 'In Progress...', 3: 'Completed'}
 
+    def add_task(self, name, duration):
+        """
+            Добавляет задачу в очередь с приоритетом.
+        """
+        task = Task(name=name, duration=duration)
+        heapq.heappush(self.queue_list, task)
 
+    def del_task(self, status: bool = False, sleep_time: bool = False) -> Task:
+        """
+            Удаляет и возвращает элемент с наивысшим приоритетом.
+            :param status: Режим вывода на печать статуса.
+            :param sleep_time: Режим при котором учитывается время выполнения.
+        """
+        if not self.is_empty:
 
+            sleep_time_value = self.get_task.duration
 
+            if status:
+                print(f'Статус: {self.status_data.get(1)}, {self.get_task.__str__}.')
 
+            if status:
+                print(f'Статус: {self.status_data.get(2)}')
 
+            if sleep_time:
+                time.sleep(sleep_time_value)
 
+            task: Task = heapq.heappop(self.queue_list)
 
+            if status:
+                print(f'Статус: {self.status_data.get(3)}.')
 
+    @property
+    def get_task(self) -> Task | None:
+        """
+            Возвращает элемент с наивысшим приоритетом.
+        """
+        # print(self.is_empty)
 
+        if not self.is_empty:
+            # print(self.is_empty)
+            # first_element
+            return self.queue_list[0]
+        raise IndexError('Список пуст! Невозможно извлечь задачу.')
 
+    @property
+    def is_empty(self) -> bool:
+        """
+            Проверяет, пуста ли очередь задач.
 
+        """
+        return len(self.queue_list) == 0
 
+    @property
+    def task_count(self) -> int:
+        """Возвращает количество задач в очереди."""
+        return len(self.queue_list)
 
+    def execute_tasks(self):
+        """
+            Последовательно выполняет все задачи в очереди.
+            Каждая задача занимает определенное время (duration).
+            После выполнения задачи удаляет её из очереди.
+        """
 
+        # ----------------------------------------------------
+        if self.is_empty:
+            print('Очередь пуста! Работа метода "execute_tasks" остановлена.')  # raise ValueError
 
+        # ----------------------------------------------------
+        print(f'Запуск обработки данных очереди длинной в {self.task_count} элементов:')
 
+        while not self.is_empty:
+            task: Task = self.del_task(status=True, sleep_time=False)
+
+        print(f'Обработка данных очереди завершена.')
+
+    def __str__(self):
+        return (
+            f'{self.__class__.__name__}. '
+            f'Список задач: {self.queue_list}'
+        )
+
+    def __repr__(self):
+        return (
+            f'{self.__class__.__name__}. '
+            f'Список задач: {self.queue_list}'
+        )
 
 
 class Interface(LogisticsMachine):
@@ -418,7 +355,6 @@ class Interface(LogisticsMachine):
         # Программа должна предоставлять удобный интерфейс для взаимодействия с пользователем.
         # Должны быть реализованы функции для тестирования добавления, сортировки, поиска и обработки запросов.
         # Продемонстрируйте работу программы на примере нескольких поставок и запросов.
-
 
 # class Df:
 #

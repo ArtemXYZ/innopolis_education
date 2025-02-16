@@ -12,7 +12,7 @@ class ServiceTols:
        pass
 
     @staticmethod
-    def _validator(value: any, *check_type: type[any]) -> None:
+    def _validator(value: any, *check_type: type[any]) -> bool:
         """
             *** Функция валидации аргументов. ***
         """
@@ -20,6 +20,7 @@ class ServiceTols:
         if not isinstance(value, check_type):
             raise TypeError(f'Недопустимый тип данных: "{type(value).__name__}", для аргумента: "{value}".')
 
+        return True
     @staticmethod
     def is_empty_array(array) -> bool:
         """
