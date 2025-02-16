@@ -2,14 +2,11 @@
     Модуль содержит представление всех доступных алгоритмов в проекте.
 """
 
-from src.algorithms_core.searches import Search
-from src.algorithms_core.sorts import Sort
+from src.algorithms_core.searches import SearchByInstanceClasses
+from src.algorithms_core.sorts import SortByInstanceClasses
 
 
-
-
-
-class Algorithms(Search, Sort):
+class AlgorithmsForeInstanceClasses(SearchByInstanceClasses, SortByInstanceClasses):
     """
         Класс-представление объединяет все алгоритмы.
     """

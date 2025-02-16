@@ -204,3 +204,7 @@ class BasePriorityQueue:
     def size(self):
         """Возвращает количество элементов в очереди."""
         return len(self.queue)
+
+
+
+
