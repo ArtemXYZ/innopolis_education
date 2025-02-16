@@ -39,13 +39,13 @@ class Delivery(ServiceTols):
 
     ) -> None:
         super().__init__()
-        self.delivery_id = delivery_id if self._validator(delivery_id, int) else ...
-        self.from_point = from_point if self._validator(from_point, int) else ...
-        self.to_point = to_point if self._validator(to_point, int) else ...
-        self.weight_cargo = weight_cargo if self._validator(weight_cargo, int) else ...
-        self.time_delivery = time_delivery if self._validator(time_delivery, int) else ...
-        self.task_name = task_name if self._validator(task_name, int) else ...
-        self.task_name = priority if self._validator(priority, int) else ...
+        self.delivery_id = delivery_id if self._validator(delivery_id, int | None) else ...
+        self.from_point = from_point if self._validator(from_point, str | None) else ...
+        self.to_point = to_point if self._validator(to_point, str | None) else ...
+        self.weight_cargo = weight_cargo if self._validator(weight_cargo, float | int | None) else ...
+        self.time_delivery = time_delivery if self._validator(time_delivery, int | None) else ...
+        self.task_name = task_name if self._validator(task_name, str | None) else ...
+        self.priority = priority if self._validator(priority, int | None) else ...
 
     @property
     def _count_attrs(self):
@@ -59,13 +59,14 @@ class Delivery(ServiceTols):
 
     def __str__(self):
         return (
-            f'{self.__class__.__name__}: '
+            # f'{self.__class__.__name__}: '
             f'id доставки: {self.delivery_id}, '
             f'пункт отправления: {self.from_point}, '
-            f'пункт назначения: {self.to_point},'
+            f'пункт назначения: {self.to_point}, '
             f'вес груза: {self.weight_cargo}, '
             f'время доставки: {self.time_delivery}, '
             f'название задачи: {self.task_name}, '
+            f'приоритет задачи: {self.priority}.'
         )
 
     # Переопределяем после dataclass:
@@ -78,6 +79,7 @@ class Delivery(ServiceTols):
             f'вес груза: {self.weight_cargo}, '
             f'время доставки: {self.time_delivery}, '
             f'название задачи: {self.task_name}, '
+            f'приоритет задачи: {self.priority}.'
         )
 
 
@@ -125,7 +127,13 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
 
     # --------------------------------- Основные методы:
     def add_delivery_task(
-            self, _from_point, _to_point, _weight_cargo, _time_delivery, _task_name, _priority
+            self,
+            _from_point: str,
+            _to_point: str,
+            _weight_cargo: int | float,
+            _time_delivery: int,
+            _task_name: str,
+            _priority: int
     ) -> None:
         """
             Метод добавления задачи на доставку (Task). Автоматически определяет айди для новой задачи.
@@ -248,11 +256,11 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
         normal_queue_obj = self.normal_queue.queue_obj
 
         # ----------------------------------------------------
-        if normal_queue_obj:
+        if not normal_queue_obj:
             print('Очередь пуста! Работа метода "process_normal_queue" остановлена.')  # raise ValueError
 
         # ----------------------------------------------------
-        print(f'Запуск обработки данных очереди длинной в {self.normal_queue.size_queue} элементов:')
+        print(f'Запуск обработки данных очереди длинной в {self.normal_queue.size_queue()} элементов:')
 
         while not self.is_empty_array(normal_queue_obj):
 
@@ -263,9 +271,7 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
 
 
 
-#      изменять поставки,
 
-#      обрабатывать запросы с использованием стека и очереди,
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -369,22 +375,16 @@ class LogisticsMachine(Delivery, ServiceTols, AlgorithmsForeInstanceClasses, ):
 #         )
 
 
-class Interface(LogisticsMachine):
-
-    def __init__(self):
-        super().__init__()
+# class Interface(LogisticsMachine):
+#
+#     def __init__(self):
+#         super().__init__()
 
         # Программа должна предоставлять удобный интерфейс для взаимодействия с пользователем.
         # Должны быть реализованы функции для тестирования добавления, сортировки, поиска и обработки запросов.
         # Продемонстрируйте работу программы на примере нескольких поставок и запросов.
 
-# class Df:
-#
-#     def __init__(self, a, d,):
-#         self.a = a
-#         self.d = d
-#
-# sdf_1 = Df('qeqqt',2)
-# sdf_2 = Df('qeqqt' ,3)
-#
-# print(sdf_1.a == sdf_2.a)
+
+dliv = LogisticsMachine()
+dliv.add_delivery_task('Орск', 'Москва', 123.21,45,'Стиральная машинка', 23)
+dliv.process_normal_queue()
