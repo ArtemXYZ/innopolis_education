@@ -3,8 +3,8 @@
 """
 
 from collections import deque
-import heapq
 
+# from midel_attestation.logistics_company import Delivery
 from src.services.tools import ServiceTols
 
 
@@ -33,7 +33,7 @@ class QueueByInstanceClasses(ServiceTols):
             self.queue_obj = deque(_array)
         return self
 
-    def add_queue(self, item: object) -> None:
+    def add_in_queue(self, item: object) -> None:
         """
             Добавляет элемент в конец очереди.
             :param item: Экземпляр класса для добавления в очередь.
@@ -42,7 +42,7 @@ class QueueByInstanceClasses(ServiceTols):
         self._validator(item, object)
         self.queue_obj.append(item)
 
-    def del_queue(self) -> object:
+    def del_in_queue(self) -> object:
         """
             Удаляет и возвращает элемент из начала очереди.
 
