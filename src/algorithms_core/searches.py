@@ -3,8 +3,6 @@
 """
 
 
-
-
 class SearchByListTuple:
     """
         Класс содержит алгоритмы поиска по list[tuple].
@@ -12,8 +10,6 @@ class SearchByListTuple:
 
     def __init__(self):
         pass
-
-
 
     @staticmethod
     def _linear(
@@ -35,7 +31,6 @@ class SearchByListTuple:
         if not tuple_list:
             raise ValueError(f'Ошибка, переданный массив пуст, операция не может быть выполнена! {tuple_list}.')
 
-
         # Поиск элемента в массиве:
         for index, _tuple in enumerate(tuple_list):
 
@@ -54,7 +49,6 @@ class SearchByListTuple:
         # Если элемент не найден после прохода по всему списку
         print(f'Заданный элемент "{search_element}" для поиска не найден в массиве! {tuple_list}.')
         return None
-
 
     @staticmethod
     def _binary(
