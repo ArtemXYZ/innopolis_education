@@ -19,7 +19,7 @@ class SitemapHandler:
         self._arq = arq
 
     @staticmethod
-    def pars_sitemap_xml(xml_data: bytes) -> [str, ...]:
+    async def pars_sitemap_xml(xml_data: bytes) -> [str, ...]:
         """
             Вспомогательный метод для обработки данных из xml.
 
@@ -119,6 +119,6 @@ class SitemapHandler:
         _xml_byte_data: bytes = await self._arq.get_no_disconnect_request(url=url_sitemap, mode='bytes')
 
         # Получаем все категории (categories_ids) с сайт-мап, [str, ...]:
-        _ids: set = self._tls.pars_sitemap_xml(_xml_byte_data)
+        _ids: set = await self.pars_sitemap_xml(_xml_byte_data)
 
         return _ids

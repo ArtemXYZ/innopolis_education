@@ -10,6 +10,7 @@ class Aiofiler:
     def __init__(self):
         pass
 
+    @staticmethod
     async def aiowriter(
             filename: str,
             data: str | list | tuple,

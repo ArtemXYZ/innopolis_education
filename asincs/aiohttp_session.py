@@ -316,7 +316,7 @@ class RESTAsyncRequest:
 
             try:
                 # Основной запрос:
-                data = self.get_async_response(
+                data = await self.get_async_response(
                     url=url,
                     params=params,
                     cookies=cookies,
