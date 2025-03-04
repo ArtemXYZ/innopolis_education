@@ -29,7 +29,7 @@ class StackByInstanceClasses(ServiceTols):
         if self.stack_obj:
             raise ValueError(f'Ошибка инициализации очереди, очередь не пустая: {self.stack_obj:}')
         else:
-            self._validator(_array, list | list[object])
+            self.validator(_array, list | list[object])
             self.stack_obj = _array
             heapq.heappop(self.stack_obj)
         return self
@@ -40,7 +40,7 @@ class StackByInstanceClasses(ServiceTols):
             :param item: Экземпляр класса для добавления в очередь.
         """
 
-        self._validator(item, Delivery)
+        self.validator(item, Delivery)
         heapq.heappush(self.stack_obj, item)  #
     def del_in_stack(self) -> object:
         """
@@ -59,7 +59,7 @@ class StackByInstanceClasses(ServiceTols):
             :return: Количество элементов в очереди.
         """
 
-        self._validator(self.stack_obj, object)
+        self.validator(self.stack_obj, object)
 
         return self.siz_array(self.stack_obj)
 

@@ -29,7 +29,7 @@ class QueueByInstanceClasses(ServiceTols):
         if self.queue_obj:
             raise ValueError(f'Ошибка инициализации очереди, очередь не пустая: {self.queue_obj:}')
         else:
-            self._validator(_array, list)
+            self.validator(_array, list)
             self.queue_obj = deque(_array)
         return self
 
@@ -39,7 +39,7 @@ class QueueByInstanceClasses(ServiceTols):
             :param item: Экземпляр класса для добавления в очередь.
         """
 
-        self._validator(item, object)
+        self.validator(item, object)
         self.queue_obj.append(item)
 
     def del_in_queue(self) -> object:
@@ -60,7 +60,7 @@ class QueueByInstanceClasses(ServiceTols):
             :return: Количество элементов в очереди.
         """
 
-        self._validator(self.queue_obj, object)
+        self.validator(self.queue_obj, object)
 
         return self.siz_array(self.queue_obj)
 

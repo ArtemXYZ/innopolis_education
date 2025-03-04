@@ -158,7 +158,7 @@ class SearchByInstanceClasses:
         for index, element_array in enumerate(array):
 
             # Валидация:
-            self.service_tools._validator(element_array, object)
+            self.service_tools.validator(element_array, object)
 
             attribute_value = getattr(element_array, attribute_name)
 
@@ -218,7 +218,7 @@ class SearchByInstanceClasses:
             midl_element = array[midl_index]
 
             # Валидация:
-            self.service_tools._validator(midl_element, object)
+            self.service_tools.validator(midl_element, object)
 
             attribute_value = getattr(midl_element, attribute_name)
 

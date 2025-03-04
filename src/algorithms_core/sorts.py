@@ -181,7 +181,7 @@ class SortByInstanceClasses:
         pivot = array[len(array) // 2]
 
         # Валидация:
-        self.service_tools._validator(pivot, object)
+        self.service_tools.validator(pivot, object)
 
         # Получаем значение атрибута опорного элемента
         pivot_value = getattr(pivot, attribute_name)
@@ -251,8 +251,8 @@ class SortByInstanceClasses:
             # Получаем значения атрибутов для сравнения
 
             # Валидация:
-            self.service_tools._validator(left[i], object)
-            self.service_tools._validator(right[j], object)
+            self.service_tools.validator(left[i], object)
+            self.service_tools.validator(right[j], object)
 
             left_value = getattr(left[i], attribute_name)
             right_value = getattr(right[j], attribute_name)
@@ -326,8 +326,8 @@ class SortByInstanceClasses:
         right = 2 * i + 2  # Правый дочерний элемент
 
         # Валидация:
-        self.service_tools._validator(arr[left], object)
-        self.service_tools._validator(arr[right], object)
+        self.service_tools.validator(arr[left], object)
+        self.service_tools.validator(arr[right], object)
 
         # Если левый дочерний элемент существует и больше корня
         if left < n and getattr(arr[left], attribute_name) > getattr(arr[largest], attribute_name):

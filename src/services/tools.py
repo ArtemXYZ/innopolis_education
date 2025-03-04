@@ -12,7 +12,7 @@ class ServiceTols:
        pass
 
     @staticmethod
-    def _validator(value: any, *check_type: type[any]) -> bool:
+    def validator(value: any, *check_type: type[any]) -> bool:
         """
             *** Функция валидации аргументов. ***
         """
