@@ -70,64 +70,98 @@ def net_salary(gross_salary, tax_rate):
     """
         Функция для расчета чистой зарплаты.
     """
-    pass
-    tls.validator(percentage, int)
 
+    tls.validator(gross_salary, int)
+    tls.validator(tax_rate, float)
+
+    return gross_salary - (gross_salary * tax_rate)
 
 def final_salary(base_salary, bonus):
     """
-        Функция.
+        Функция для расчета итоговой зарплаты с учетом бонусов.
     """
-    tls.validator(percentage, int)
-    pass
+    tls.validator(base_salary, int)
+    tls.validator(bonus, int)
 
+    return base_salary + bonus
 
+# _________________________________________ 3. Композиция функций
 def calculate_hours(hours_per_day, days):
     """
-        Функция.
+        Функция для расчета вычисляет общее количество отработанных часов.
     """
-    tls.validator(percentage, int)
-    pass
+    tls.validator(hours_per_day, int)
+    tls.validator(days, int)
+
+    return hours_per_day * days
 
 def calculate_gross_salary(hours, hourly_rate):
     """
-        Функция.
+        Функция вычисляет заработную плату до вычета налогов.
     """
-    tls.validator(percentage, int)
-    pass
+    tls.validator(hours, int)
+    tls.validator(hourly_rate, int)
+
+    return hours * hourly_rate
 
 def composed_salary_function(hours_per_day, days, hourly_rate):
     """
-        Функция.
+        Функция для расчета конечной зарплаты до вычета налогов.
     """
-    tls.validator(percentage, int)
-    pass
 
+    return calculate_gross_salary(calculate_hours(hours_per_day, days), hourly_rate)
+
+# _________________________________________
 def calculate_net_salary(gross_salary):
     """
         Функция.
     """
-    tls.validator(percentage, int)
-    pass
+
+    tls.validator(gross_salary, int)
+
+    return gross_salary * 0.20
 
 def apply_bonus(salary, bonus):
     """
-        Функция.
+        Функция расчета зарплаты с учетом бонусов.
     """
-    tls.validator(percentage, int)
-    pass
+
+    tls.validator(salary, int)
+    tls.validator(bonus, int)
+
+    return salary + bonus
 
 
 def final_salary_composition(gross_salary, bonus):
     """
-        Функция.
+        Функция для расчета чистой зарплаты после применения бонусов и вычета налогов.
     """
-    tls.validator(percentage, int)
-    pass
+
+    tls.validator(gross_salary, int)
+    tls.validator(bonus, int)
+
+    salary_with_bonus = apply_bonus(gross_salary, bonus)
+    net_salary = calculate_net_salary(gross_salary)
+
+    return salary_with_bonus - net_salary
 
 
-# 1
+# 1 Функция для расчета отработанных часов:
 print(hours_per_day(8)(20))
 
-# 2
+# 2 Функция для расчета бонусов:
 print(bonus_percentage(10)(3000))
+
+# 3 Создаем функцию с фиксированным налогом 20%:
+tax_20 = partial(net_salary, tax_rate=0.20)
+print(tax_20(5000))
+
+# 4 Создаем функцию с фиксированным бонусом 500:
+bonus_500 = partial(final_salary, bonus=500)
+print(bonus_500(3000))
+
+# 5 Функции для расчета заработной платы:
+print(composed_salary_function(8, 20, 25))
+
+# 6 Функции для итогового расчета:
+print(final_salary_composition(4000, 300))
