@@ -35,3 +35,6 @@ class ServiceTols:
             Возвращает количество элементов в массиве.
         """
         return len(array)
+
+
+

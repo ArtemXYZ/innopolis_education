@@ -13,6 +13,8 @@ class QueueByInstanceClasses(ServiceTols):
     """
         Класс содержит реализацию очереди для списка экземпляров классов.
         Поддерживает операции добавления (enqueue) и удаления (dequeue) элементов.
+
+        Принцип работы: FIFO (First In, First Out) – "Первым пришёл, первым ушёл".
     """
 
     def __init__(self):

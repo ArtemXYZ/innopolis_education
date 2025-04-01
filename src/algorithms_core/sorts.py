@@ -343,6 +343,38 @@ class SortByInstanceClasses:
             # Рекурсивно преобразуем затронутое поддерево в max-heap
             self._sub_heapify(arr, n, largest, attribute_name)
 
+    # ------------------------------------------- selection_sort:
+    @staticmethod
+    def _selection_sort(
+            # self,
+            array: list[object],
+            attribute_name: str
+    ) -> list[object]:
+        """
+            Сортировка выбором (selection_sort).
+            Принимает список экземпляров классов и сортирует его по значению указанного атрибута.
+            Возвращает отсортированный список экземпляров классов.
+
+            :param array: Входной список экземпляров классов.
+            :param attribute_name: Имя атрибута, по которому осуществляется сортировка.
+            :return: Отсортированный список экземпляров классов.
+        """
+        # Создаем копию массива, чтобы не изменять исходный
+        arr = array.copy()
+        n = len(arr)
+
+        for i in range(n):
+            # Находим индекс минимального элемента в оставшейся части массива
+            min_idx = i
+            for j in range(i + 1, n):
+                if getattr(arr[j], attribute_name) < getattr(arr[min_idx], attribute_name):
+                    min_idx = j
+
+            # Меняем найденный минимальный элемент с первым элементом
+            arr[i], arr[min_idx] = arr[min_idx], arr[i]
+
+        return arr
+
     def __str__(self):
         return f'{self.__class__.__name__}'
 
