@@ -24,12 +24,13 @@ class PingCommand(CommandBase):
     """
 
     def __init__(self):
-        self.delay = random.randint(1, 10)
         pass
 
     async def execute(self, task_id, title):
-        await asyncio.sleep(self.delay)
-        print(f'В работе задача № {task_id}: {title}, ожидание: {self.delay} c.')
+        delay = random.randint(1, 10)
+        print(f'В работе задача № {task_id}: {title}, ожидание: {delay} c.')
+        await asyncio.sleep(delay)
+
 
 
 

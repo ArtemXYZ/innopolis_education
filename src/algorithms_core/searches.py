@@ -131,7 +131,7 @@ class SearchByInstanceClasses:
 
     def __init__(self):
 
-        self.service_tools = ServiceTols
+        self.service_tools = ServiceTols()
         self.sorts = SortByInstanceClasses()
 
     def _linear(

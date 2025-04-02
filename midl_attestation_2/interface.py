@@ -1,150 +1,146 @@
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 import time
 
-from midl_attestation_2.tasks import TaskManager
+from midl_attestation_2.manage import TaskManager
 
 
-class ApplicationInterface(TaskManager):
+class ApplicationInterface:
     """
         Инструмент взаимодействия с пользователем.
     """
 
     def __init__(self):
-        super().__init__()
+        self.manager = TaskManager()
 
-    def power(self):
+    async def power(self):
         # Приветствие и список команд (отображается один раз при запуске)
         print(
-            f'Добро пожаловать в систему управления "LogisticsMachine"!\n\n'
+            f'Добро пожаловать в систему управления "TaskManager"!\n\n'
             f'Выберите действие:\n'
-            f'1. Показать список задач на доставку.\n'
-            f'2. Сортировать список задач на доставку по весу груза.\n'
-            f'3. Сортировать список задач на доставку по времени доставки.\n'
-            f'4. Сортировать список задач на доставку по номеру доставки.\n'
-            f'5. Найти задачу на доставку по времени доставки.\n'
-            f'6. Найти задачу на доставку по по номеру доставки.\n'
-            f'7. Добавить задачу.\n'
-            f'8. Удалить задачу.\n'
-            f'9. Запустить доставку по очереди.\n'
-            f'10. Запустить доставку по приоритету.\n'
-            f'11. Выйти\n'
+            f'1. Показать список задач.\n'
+            f'2. Найти задачу по идентификатору.\n'
+            f'3. Добавить задачу.\n'
+            f'4. Удалить задачу.\n'
+            f'5. Запустить все задачи.\n'
+            f'6. Выйти\n'
         )
 
         while True:
 
-            input_value: int = input('Введите команду: ')
+            input_value: str = input('Введите команду: ')
 
             if input_value == '1':
-                print(self.delivery_list)
+                print(self.manager.get_sorting_tasks)
+                continue
 
             elif input_value == '2':
-                print(self.sort_delivery_list_by_weight_cargo())
+
+                # Вложенный цикл для подменю
+                while True:
+                    print(
+                        f'Вы находитесь в разделе поиска задач.\n\n'
+                        f'Выберите действие:\n'
+                        f'1. Ввести идентификатор для поиска.\n'
+                        f'2. Выйти в главное меню.\n'
+                    )
+
+                    sub_input_value: str = input('Введите команду: ')
+
+                    if sub_input_value == '1':
+
+                        sub_sub_input_value: str = input('Введите идентификатор задачи: ')
+
+                        try:
+                            print(self.manager.search_task(task_id=int(sub_sub_input_value)))
+                        except Exception as r:
+                            print(f'Ошибка: {r}')
+                            time.sleep(2)
+                            continue
+
+                    elif sub_input_value == '2':
+                        break
+                    else:
+                        print('Неверный ввод. Пожалуйста, выберите действие:')
+                    time.sleep(1)
 
             elif input_value == '3':
-                print(self.sort_delivery_list_by_time_delivery())
 
-            elif input_value == '4':
-                print(self.sort_delivery_list_by_delivery_id())
-
-            elif input_value == '5':
-
-                input_value: str = input('Введите time_delivery: ')
-
-                print(self.search_delivery_elem_by_time_delivery(int(input_value)))
-
-            elif input_value == '6':
-
-                input_value: str = input('Введите delivery_id: ')
-
-                print(self.search_delivery_elem_by_delivery_id(int(input_value)))
-
-            elif input_value == '7':
-                while True:  # Вложенный цикл для подменю
+                # Вложенный цикл для подменю
+                while True:
                     print(
-                        f'Вы находитесь в разделе оформления заказов на доставку.\n\n'
+                        f'Вы находитесь в разделе создания задач.\n\n'
                         f'Выберите действие:\n'
-                        f'1. Ввести данные.\n'
+                        f'1. Ввести название задачи для создания.\n'
                         f'2. Выйти в главное меню.\n'
                     )
 
                     # Запрос действия от пользователя:
-                    sub_input_value: int = input('Введите команду: ')
+                    sub_input_value: str = input('Введите команду: ')
 
-                    # Обработка команд подменю
                     if sub_input_value == '1':
-                        # Цикл для повторного ввода
-                        while True:
-                            print('Вы выбрали ввод данных.')
 
-                            #
-                            from_point: str = input('Введите место отправления: ')
-                            to_point: str = input('Введите место назначения: ')
-                            weight_cargo: int | float = float(input('Введите вес груза: '))
-                            time_delivery: int = int(input('Введите время доставки: '))
-                            task_name: str = input('Введите пометку для груза (название): ')
-                            priority: int = int(input('Введите приоритет: '))
-                            try:
-                                self.add_delivery_task(
-                                    from_point,
-                                    to_point,
-                                    weight_cargo,
-                                    time_delivery,
-                                    task_name,
-                                    priority
-                                )
-                                print('Данные успешно сохранены!')
-                                break
-                            except Exception as e:
-                                print(f'Ошибка: {e}.')
+                        sub_sub_input_value: str = input('Введите название задачи: ')
 
-                        continue
+                        try:
+                            task = self.manager.create_task(title=sub_sub_input_value)
+                            print(f'Задача успешно создана {task}')
+                            continue
+                        except Exception as r:
+                            print(f'Ошибка: {r}')
+                            time.sleep(2)
+                            continue
 
                     elif sub_input_value == '2':
-                        print('Возврат в главное меню.')
-                        break  # Выход из вложенного цикла и возврат в главное меню
-                    else:
-                        print('Неверная команда. Пожалуйста, выберите 1, 2.')
-
-            elif input_value == '8':
-                while True:
-                    print(f'Вы в меню удаления задач.')
-                    search_delivery_id: int = int(input(f'Если вы хотите удалить книгу, введите номер доставки: '))
-
-                    if search_delivery_id:
-
-                        self.remove_delivery_task('delivery_id', search_delivery_id)
-                        print('Задача успешно удалена!')
                         break
                     else:
-                        continue
-                continue
+                        print('Неверный ввод. Пожалуйста, выберите действие:')
+                    time.sleep(1)
 
-            elif input_value == '9':
+            elif input_value == '4':
+
+                # Вложенный цикл для подменю
                 while True:
-                    print(f'Вы в меню запуска доставки по очереди.\n')
+                    print(
+                        f'Вы находитесь в разделе удаления задач.\n\n'
+                        f'Выберите действие:\n'
+                        f'1. Ввести идентификатор задачи для удаления.\n'
+                        f'2. Выйти в главное меню.\n'
+                    )
 
-                    try:
-                        self.process_normal_queue()
+                    # Запрос действия от пользователя:
+                    sub_input_value: str = input('Введите команду: ')
+
+                    if sub_input_value == '1':
+
+                        sub_sub_input_value: str = input('Введите идентификатор задачи: ')
+
+                        try:
+                            self.manager.delete_task(task_id=int(sub_sub_input_value))
+                            continue
+                        except Exception as r:
+                            print(f'Ошибка: {r}')
+                            time.sleep(2)
+                            continue
+
+                    elif sub_input_value == '2':
                         break
-                    except Exception as r:
-                        print(f'Ошибка: {r}')
+                    else:
+                        print('Неверный ввод. Пожалуйста, выберите действие:')
+                    time.sleep(1)
 
+            elif input_value == '5':
 
-            elif input_value == '10':
-                print(f'Вы в меню запуска доставки по приоритету.\n')
                 try:
-                    self.process_stack()
-                    break
+                    await self.manager.run_all_tasks()
+                    continue
                 except Exception as r:
                     print(f'Ошибка: {r}')
+                    time.sleep(2)
+                    continue
 
-
-            elif input_value == '11':
+            elif input_value == '6':
                 print('Выход из системы.')
                 break
-
 
             else:
                 print('Неверный ввод. Пожалуйста, выберите действие от 1 до 11.')
@@ -159,6 +155,4 @@ class ApplicationInterface(TaskManager):
 
 
 
-# test = Interface()
-# test.power()
 

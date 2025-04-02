@@ -155,7 +155,7 @@ class SortByInstanceClasses:
 
     def __init__(self):
 
-        self.service_tools = ServiceTols
+        self.service_tools = ServiceTols()
 
     # ------------------------------------------- quick_sort:
     def _quick_sort(

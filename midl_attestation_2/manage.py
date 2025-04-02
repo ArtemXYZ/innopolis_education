@@ -11,7 +11,7 @@ from midl_attestation_2.tasks import Task
 from src.services.tools import ServiceTols
 
 
-class TaskManager(Task, ServiceTols, AlgorithmsForeInstanceClasses):
+class TaskManager(AlgorithmsForeInstanceClasses, Task, ServiceTols):
     """
         Менеджер управления задачами.
         Реализация паттерна "Одиночка".
@@ -52,10 +52,14 @@ class TaskManager(Task, ServiceTols, AlgorithmsForeInstanceClasses):
 
         return time.time()  # Пример: 1711987265.123456
 
-    def create_task(self, title, time_delta):
+    def create_task(self, title: str):
         """
             Добавление новой задачи в список.
         """
+
+        self.validator(title, str)
+        if len(title) == 0:
+            raise ValueError('значение "title" обязательно к заполнению (не может быть пустым)!')
 
         task_obj = Task(
             task_id=self._auto_increment,
@@ -63,8 +67,9 @@ class TaskManager(Task, ServiceTols, AlgorithmsForeInstanceClasses):
             title=title,
             command=self.ping,
         )
-
         self.task_list.append(task_obj)
+
+        return task_obj
 
     def delete_task(self, task_id: int) -> None:
         """
@@ -72,8 +77,11 @@ class TaskManager(Task, ServiceTols, AlgorithmsForeInstanceClasses):
         """
 
         self.validator(task_id, int)
+        if task_id < 0:
+            raise ValueError('значение "task_id" не может быть отрицательным!')
         index = self._searcher(self.task_list, task_id, 'task_id')
         self.task_list.pop(index)
+        return print(f'Задача {task_id} удалена.')
 
     async def run_all_tasks(self):
         """
@@ -83,11 +91,14 @@ class TaskManager(Task, ServiceTols, AlgorithmsForeInstanceClasses):
         if self.task_list:
             # Создаем список корутин, вызывая execute() для каждой задачи
             coroutines = [task.execute() for task in self.task_list]
+            print('Запуск задач:')
             await asyncio.gather(*coroutines)
-        else:
-            print('В системе не зарегистрировано ни одной задачи, запуск остановлен.')
+            return print('Выполнение задач завершено:')
 
-    # view_tasks_list
+        else:
+            raise ValueError('В системе не зарегистрировано ни одной задачи, запуск остановлен.')
+
+    @property
     def get_sorting_tasks(self) -> list:
         """
             Просмотр списка задач, отсортированного по времени создания.
@@ -103,6 +114,12 @@ class TaskManager(Task, ServiceTols, AlgorithmsForeInstanceClasses):
         """
 
         self.validator(task_id, int)
+        if task_id < 0:
+            raise ValueError('значение "task_id" не может быть отрицательным!')
         index = self._searcher(self.task_list, task_id, 'task_id')
-
         return self.task_list[index].title
+
+
+# ss = TaskManager()
+# ss.create_task(title='wew')
+# ss.delete_task(task_id=1)
