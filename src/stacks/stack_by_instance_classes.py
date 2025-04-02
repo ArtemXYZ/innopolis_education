@@ -4,7 +4,7 @@
 
 import heapq
 
-# from midel_attestation.logistics_company import Delivery
+# from midl_attestation.logistics_company import Delivery
 from src.services.tools import ServiceTols
 
 

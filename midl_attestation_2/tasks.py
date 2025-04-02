@@ -1,25 +1,52 @@
 """
     Менеджер управления задачами.
 """
+
+import asyncio
 import time
+from abc import ABC, abstractmethod
+import random
 
 from src.algorithms_core.main import AlgorithmsForeInstanceClasses
 from src.services.tools import ServiceTols
 from src.queues.queues_by_instance_classes import QueueByInstanceClasses
 
 
-
 # ----------------------------------------------------------------------------------------------------------------------
+# Паттерн "Команда"
+class Command(ABC):
+
+    @abstractmethod
+    async def execute(self):
+        pass
+
+
+class CommandValue(Command):
+    """
+        Конкретная реализация команды. Модель объекта "Команда".
+        Реализует паттерн "команда", являясь "командой" или непосредственно исполняемой логикой
+        в цепочке взаимодействия.
+    """
+
+    def __init__(self):
+        self.delay = random.randint(1, 10)
+
+    async def execute(self):
+        await asyncio.sleep(self.delay)
+
+
 class Task(ServiceTols):
     """
         Модель объекта "Задача".
+        Реализует паттерн "команда", являясь "отправителем" или интерфейсом в цепочке взаимодействия.
     """
 
     def __init__(
             self,
             task_id: int = None,
             creation_time: float = None,
-            title: str = None
+            title: str = None,
+            command: Command = None
     ) -> None:
         """
             Все атрибуты по умолчанию None, что бы можно было наследоваться без явной передачи аргументов.
@@ -27,22 +54,23 @@ class Task(ServiceTols):
             :arg task_id: id задачи.
             :arg creation_time: Время создания задачи.
             :arg title: Название задачи.
+            :arg command: Переданная логика (паттерн команда).
         """
 
         super().__init__()
         self.task_id = task_id if self.validator(task_id, int | None) else ...
         self.creation_time = creation_time if self.validator(creation_time, float | None) else ...
         self.title = title if self.validator(title, str | None) else ...
+        self.command = command if self.validator(command, Command | None) else ...
 
-    @property
-    def _count_attrs(self):
+    async def execute(self) -> None:
         """
-            Считает количество параметров в классе.
-            Со временем характеристики могут добавляться, поэтому данный метод предназначен для точного определения
-            их количества.
+            Метод обертка для универсальной реализации любой логики из переданного объекта (паттерн "команда").
+            Выполняет переданную команду.
         """
 
-        return len(vars(self))
+        if self.command is not None:
+            await self.command.execute()
 
     def __str__(self):
         # return [(k, v) for k, v in  vars(self).items()]
@@ -73,7 +101,6 @@ class TaskManager(Task, ServiceTols, AlgorithmsForeInstanceClasses):
         super().__init__()
         self.task_list: list[Task] = []
         self.normal_queue = QueueByInstanceClasses()
-
 
     @property
     def _auto_increment(self) -> int:
@@ -142,8 +169,6 @@ class TaskManager(Task, ServiceTols, AlgorithmsForeInstanceClasses):
         index = self._searcher(self.task_list, task_id, 'task_id')
 
         return self.task_list[index].title
-
-
 
 
 d = Task()
