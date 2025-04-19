@@ -20,7 +20,7 @@ from sqlalchemy.engine.url import URL
 # ======================================================================================================================
 class Connector:
 
-    def __init__(self, config: dict | URL | str):  # = CONFIG_LOCAL_DB
+    def __init__(self, config: dict | URL | str ):  # = CONFIG_LOCAL_DB
         self.config = config
         self.url_db = self.get_url_string
         self.engine = create_engine(self.url_db)  # , echo=True (Для логирования)!
